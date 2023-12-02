@@ -48,14 +48,14 @@ fn md2(data: Vec<u8>) -> String {
     for i in 0..(n / 16) {
         for j in 0..16 {
             let c = data[i * 16 + j];
-            cs[j] = cs[j] ^ S_TABLE[(c ^ l) as usize];
+            cs[j] ^= S_TABLE[(c ^ l) as usize];
             l = cs[j];
         }
     }
     data.append(&mut cs);
 
     // 3.3 initialize MD buffer
-    let mut x = vec![0_u8; 48];
+    let mut x = [0_u8; 48];
 
     //3.4 Process message in 16-byte blocks
     let n = data.len();
