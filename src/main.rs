@@ -25,10 +25,16 @@ fn main() {
     let mut handle = stdin.lock();
     let _ = handle.read_to_end(&mut buffer);
 
-    let mut data = buffer;
-    //let mut data = String::from("").into_bytes();
+    if buffer.ends_with(&[0x0a_u8]) {
+        buffer.pop();
+    }
+
+    println!("{}", md2(buffer));
+}
+
+fn md2(data: Vec<u8>) -> String {
     let length_modulo_16 = 16 - data.len() % 16;
-    println!("{}",hex::encode(data.clone()));
+    let mut data = data.clone();
 
     //3.1 append padding bytes
     let mut padding = vec![length_modulo_16 as u8; length_modulo_16];
@@ -37,19 +43,16 @@ fn main() {
 
     //3.2 append checksum
     let mut cs = vec![0_u8; 16];
-    //println!("{}",hex::encode(cs.clone()));
     let mut l = 0_u8;
     let n = data.len();
     for i in 0..(n / 16) {
         for j in 0..16 {
             let c = data[i * 16 + j];
-            cs[j] = S_TABLE[(c ^ l) as usize];
+            cs[j] = cs[j] ^ S_TABLE[(c ^ l) as usize];
             l = cs[j];
         }
     }
-    //println!("{}",hex::encode(cs.clone()));
     data.append(&mut cs);
-    //println!("{}",hex::encode(data.clone()));
 
     // 3.3 initialize MD buffer
     let mut x = vec![0_u8; 48];
@@ -72,15 +75,70 @@ fn main() {
             t = ((t as u16 + j as u16) % 256) as u8;
         }
     }
-    //println!("{}",hex::encode(x.clone()));
 
-    // output
-    //let mut bufout = io::stdout();
-    //let _ = bufout.write(&x);
     let digest = &x[0..16];
-    //for letter in x {
-    //    print!("{:#02x}",letter);
-    //}
-    let output = hex::encode(digest);
-    println!("{}", output);
+    hex::encode(digest)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test0() {
+        assert_eq!(
+            md2("".to_string().into_bytes()),
+            "8350e5a3e24c153df2275c9f80692773"
+        );
+    }
+    #[test]
+    fn test1() {
+        assert_eq!(
+            md2("a".to_string().into_bytes()),
+            "32ec01ec4a6dac72c0ab96fb34c0b5d1"
+        );
+    }
+    #[test]
+    fn test2() {
+        assert_eq!(
+            md2("abc".to_string().into_bytes()),
+            "da853b0d3f88d99b30283a69e6ded6bb"
+        );
+    }
+    #[test]
+    fn test3() {
+        assert_eq!(
+            md2("message digest".to_string().into_bytes()),
+            "ab4f496bfb2a530b219ff33031fe06b0"
+        );
+    }
+    #[test]
+    fn test4() {
+        assert_eq!(
+            md2("abcdefghijklmnopqrstuvwxyz".to_string().into_bytes()),
+            "4e8ddff3650292ab5a4108c3aa47940b"
+        );
+    }
+    #[test]
+    fn test5() {
+        assert_eq!(
+            md2(
+                "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+                    .to_string()
+                    .into_bytes()
+            ),
+            "da33def2a42df13975352846c30338cd"
+        );
+    }
+    #[test]
+    fn test6() {
+        assert_eq!(
+            md2(
+                "12345678901234567890123456789012345678901234567890123456789012345678901234567890"
+                    .to_string()
+                    .into_bytes()
+            ),
+            "d5976f79d83d3a0dc9806c3c66f3efd8"
+        );
+    }
 }
