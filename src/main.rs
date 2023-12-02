@@ -28,9 +28,10 @@ fn main() {
     let mut data = buffer;
     //let mut data = String::from("").into_bytes();
     let length_modulo_16 = 16 - data.len() % 16;
+    println!("{}",hex::encode(data.clone()));
 
     //3.1 append padding bytes
-    let mut padding = vec![0_u8; length_modulo_16];
+    let mut padding = vec![length_modulo_16 as u8; length_modulo_16];
     data.append(&mut padding);
     //println!("{}",hex::encode(data.clone()));
 
