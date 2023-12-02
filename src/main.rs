@@ -69,7 +69,7 @@ fn md2(data: Vec<u8>) -> String {
 
         for j in 0..18 {
             for k in 0..48 {
-                x[k] = x[k] ^ S_TABLE[t as usize];
+                x[k] ^= S_TABLE[t as usize];
                 t = x[k];
             }
             t = ((t as u16 + j as u16) % 256) as u8;
