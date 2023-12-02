@@ -33,11 +33,11 @@ fn main() {
 }
 
 fn md2(data: Vec<u8>) -> String {
-    let length_modulo_16 = 16 - data.len() % 16;
     let mut data = data.clone();
 
     //3.1 append padding bytes
-    let mut padding = vec![length_modulo_16 as u8; length_modulo_16];
+    let padding_bytes = 16 - data.len() % 16;
+    let mut padding = vec![padding_bytes as u8; padding_bytes];
     data.append(&mut padding);
     //println!("{}",hex::encode(data.clone()));
 
