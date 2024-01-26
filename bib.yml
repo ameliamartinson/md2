@@ -1,0 +1,28 @@
+rfc1113:
+    type: Article
+    title: "Privacy Enhancement for Internet Electronic Mail: Part I -- Message Encipherment and Authentication Procedures"
+    author: ["Linn, J."]
+    date: 1989-08-01
+    parent:
+        type: Article
+        publisher: RFC 1113, DEC, IAB Privacy Task Force
+rfc1114:
+    type: Article
+    title: "Privacy Enhancement for Internet Electronic Mail: Part II -- Certificate-Based Key Management"
+    author: ["Kent, S.","Linn, J."]
+    date: 1989-08-01
+    parent:
+        type: Article
+        publisher: RFC 1114, BBNCC, DEC, IAB Privacy Task Force
+rfc1115:
+    type: Article
+    title: "Privacy Enhancement for Internet Electronic Mail: Part III -- Algorithms, Modes, and Identifiers"
+    author: ["Linn, J."]
+    date: 1989-08-01
+    parent:
+        type: Article
+        publisher: RFC 1115, DEC, IAB Privacy Task Force
+ccitt:
+    type: Misc
+    title: "The Directory - Authentication Framework"
+    publisher: CCIT Recommendation X.509 (1988)
